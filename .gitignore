@@ -8,3 +8,6 @@ pom.xml
 /.lein-*
 /.env
 *.log
+*.db
+.DS_Store
+.nrepl-port
