@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="jumbotron">
-    <h1>Welcome to clojure-curry</h1>
-    <p>Time to start building your site!</p>
-    <p><a class="btn btn-primary btn-lg" href="http://luminusweb.net">Learn more &raquo;</a></p>
-  </div>
+<div class="jumbotron">
+	<h1>clojure-curry</h1>
+	<p>Go order!</p>
+	<p><a class="btn btn-primary btn-lg" href="order">Order &raquo;</a></p>
+</div>
 
-  <div class="row">
-    <div class="span12">
-    {{docs|markdown}}
-    </div>
-  </div>
+<div class="row">
+	<div class="span9">
+		<h2>Current orders:</h2>
+		<ul>
+			{% for order in orders %}
+			<li>{{order.first_name}} — {{order.curry}} {{order.hotness}}
+			{% if order.garlic%} <strong>(+GN)</strong>{% endif %}</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
 {% endblock %}

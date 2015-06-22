@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+	<div class="span12">
+		<form method="POST" action="/order">
+			{% csrf-field %}
+			<p>
+			Curry:
+			<select class="form-control" type="text" name="curry" value="{{curry}}" >
+				{% for c in curries %}
+				<option>{{c.name}}</option>
+				{% endfor %}
+			</select>
+			</p>
+			{% if errors.curry %}
+			<div class="alert alert-danger">{{errors.curry|join}}</div>
+			{% endif %}
+			<p>
+			Hotness:
+			<select class="form-control" type="text" name="hotness" value="{{hotness}}" />
+				<option>Mild</option>
+				<option>Medium</option>
+				<option>Hot</option>
+			</select>
+			</p>
+			{% if errors.hotness %}
+			<div class="alert alert-danger">{{errors.hotness|join}}</div>
+			{% endif %}
+			<p>
+			<label>
+				<input type="radio" name="garlic" value="false" checked="true">
+				Plain naan
+			</label>
+			<br>
+			<label>
+				<input type="radio" name="garlic" value="true">
+				Garlic naan (+ $1)
+			</label>
+			</p>
+			{% if errors.garlic %}
+			<div class="alert alert-danger">{{errors.garlic|join}}</div>
+			{% endif %}
+			<input type="submit" class="btn btn-primary" value="Order!" />
+		</form>
+	</div>
+</div>
+{% endblock %}

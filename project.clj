@@ -1,7 +1,7 @@
 (defproject clojure-curry "0.1.0-SNAPSHOT"
 
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Clojure-curry: a curry-ordering website"
+  :url "http://florent:3000/curry"
 
   :dependencies [[org.clojure/clojure "1.7.0-RC1"]
                  [selmer "0.8.2"]
@@ -19,6 +19,7 @@
                  [org.clojure/tools.nrepl "0.2.10"]
                  [ring-server "0.4.0"]
                  [ragtime "0.3.9"]
+                 [buddy "0.5.4"]
                  [org.clojure/java.jdbc "0.3.7"]
                  [instaparse "1.4.0"]
                  [yesql "0.5.0-rc2"]

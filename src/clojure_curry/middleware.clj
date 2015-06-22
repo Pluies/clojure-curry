@@ -12,7 +12,12 @@
             [ring.middleware.session-timeout :refer [wrap-idle-session-timeout]]
             [ring.middleware.session.memory :refer [memory-store]]
             [ring.middleware.format :refer [wrap-restful-format]]
-            
+            ; Authentication
+            [buddy.auth.middleware :refer [wrap-authentication]]
+            [buddy.auth.backends.session :refer [session-backend]]
+            [buddy.auth.accessrules :refer [wrap-access-rules]]
+            [buddy.auth :refer [authenticated?]]
+            [clojure-curry.layout :refer [*identity*]]
             
             ))
 
@@ -50,12 +55,30 @@
 (defn wrap-formats [handler]
   (wrap-restful-format handler :formats [:json-kw :transit-json :transit-msgpack]))
 
+(defn on-unauthorized [request response]
+  (redirect "/login"))
+
+(def rules
+  [{:uri "/"
+    :handler authenticated?}])
+
+(defn wrap-identity [handler]
+  (fn [request]
+    (binding [*identity* (or (get-in request [:session :identity]) nil)]
+      (handler request))))
+
+(defn wrap-auth [handler]
+  (-> handler
+      wrap-identity
+      (wrap-access-rules {:rules rules :on-error on-unauthorized})
+      (wrap-authentication (session-backend))))
+
 (defn wrap-base [handler]
   (-> handler
       wrap-dev
-      
+      wrap-auth
       (wrap-idle-session-timeout
-        {:timeout (* 60 30)
+        {:timeout (* 60 60 24 30) ; 30 days
          :timeout-response (redirect "/")})
       wrap-formats
       (wrap-defaults
@@ -64,3 +87,4 @@
             (assoc-in  [:session :store] (memory-store session/mem))))
       wrap-servlet-context
       wrap-internal-error))
+
