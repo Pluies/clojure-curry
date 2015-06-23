@@ -1,6 +1,7 @@
 (ns clojure-curry.middleware
   (:require [clojure-curry.session :as session]
             [clojure-curry.layout :refer [*servlet-context*]]
+            [clojure-curry.db.core :as db]
             [taoensso.timbre :as timbre]
             [environ.core :refer [env]]
             [clojure.java.io :as io]
@@ -58,8 +59,25 @@
 (defn on-unauthorized [request response]
   (redirect "/login"))
 
+(defn any-access
+  [request]
+  true)
+
+(defn admin-access
+  [request]
+  (if-not :authenticated?
+    false
+    (let [current-email (:email (:session request))]
+      (boolean (:admin (first (db/get-user {:email current-email})))))))
+
 (def rules
-  [{:uri "/"
+  [{:pattern #"^/admin$"
+    :handler admin-access}
+   {:pattern #"^/$"
+    :handler any-access}
+   {:pattern #"^/login$"
+    :handler any-access}
+   {:pattern #"^/.+"
     :handler authenticated?}])
 
 (defn wrap-identity [handler]

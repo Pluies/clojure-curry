@@ -8,11 +8,16 @@
 
 <div class="row">
 	<div class="span9">
-		<h2>Current orders:</h2>
+		<h2>Today's orders:</h2>
 		<ul>
 			{% for order in orders %}
-			<li>{{order.first_name}} — {{order.curry}} {{order.hotness}}
-			{% if order.garlic%} <strong>(+GN)</strong>{% endif %}</li>
+			<li>
+			<form class="form-inline" method="POST" action="/delete-order/{{order.id}}">{% csrf-field %}
+				{{order.first_name}} — {{order.curry}} {{order.hotness}}
+				{% if order.garlic %} <strong>(+GN)</strong>{% endif %}
+				{% if order.can-remove %}<input type="submit" class="btn btn-link" value="Remove" />{% endif %}
+			</form>
+			</li>
 			{% endfor %}
 		</ul>
 	</div>

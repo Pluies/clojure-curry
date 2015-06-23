@@ -8,7 +8,7 @@
 			Curry:
 			<select class="form-control" type="text" name="curry" value="{{curry}}" >
 				{% for c in curries %}
-				<option>{{c.name}}</option>
+				<option x-veggie="{{c.vegetarian}}">{{c.name}}</option>
 				{% endfor %}
 			</select>
 			</p>

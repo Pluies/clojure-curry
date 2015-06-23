@@ -1,5 +1,6 @@
 (ns clojure-curry.routes.home
-  (:require [clojure-curry.layout :as layout]
+  (:require [clojure-curry.session :as session]
+            [clojure-curry.layout :as layout]
             [clojure-curry.db.core :as db]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :refer [ok]]
@@ -19,12 +20,20 @@
 (defn username [request]
   (:first_name (current-user request)))
 
+(defn can-remove [session order]
+  (let [current-email (:email session)
+        found-email (:email order)]
+    (= current-email found-email)))
+
+
 (defn home-page [request]
   (layout/render
     "home.html"
     (merge {:authenticated? (authenticated? request)
             :username (username request)
-            :orders (db/get-orders)}
+            :orders (map
+                      #(merge {:can-remove (can-remove (:session request) %)} %)
+                      (db/get-todays-orders))}
            (select-keys (:flash request) [:name :message :errors]))))
 
 (defn order-page [request]
@@ -66,6 +75,17 @@
                                params))
       (redirect "/"))))
 
+(defn validate-delete-order [params]
+  nil)
+
+(defn delete-order! [request order-id]
+  (if-let [errors (validate-delete-order order-id)]
+    (-> (redirect "/order")
+        (assoc :flash (assoc (:params request) :errors errors)))
+    (do
+      (db/delete-order! {:id order-id})
+      (redirect "/"))))
+
 (defn login!
   "Check request username and password against authdata username and passwords.
   On successful authentication, set appropriate user into the session and
@@ -93,15 +113,16 @@
   (assoc (redirect "/") :session nil))
 
 (defroutes home-routes
-  (GET  "/" request (home-page request))
-  (POST "/order" request (order! request))
-  (GET  "/order" request (order-page request))
+  (GET    "/" request (home-page request))
+  (GET    "/order" request (order-page request))
+  (POST   "/order" request (order! request))
+  (POST   "/delete-order/:id" [request id] (delete-order! request id))
 ;  )
 ;
 ;(defroutes auth-routes
-  (GET  "/login" [] login-page)
-  (POST "/login" [] login!)
-  (GET  "/changepass" [] changepass-page)
-  (POST "/changepass" [] changepass!)
-  (POST "/logout" [] logout!))
+  (GET    "/login" [] login-page)
+  (POST   "/login" [] login!)
+  (GET    "/changepass" [] changepass-page)
+  (POST   "/changepass" [] changepass!)
+  (POST   "/logout" [] logout!))
 

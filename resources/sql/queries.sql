@@ -25,16 +25,30 @@ WHERE email = :email
 -- get a list of all available curries
 SELECT * FROM curries
 
+-- name: delete-order!
+-- delete an existing curry order
+DELETE FROM orders
+WHERE id = :id
+
 -- name: create-order!
 -- insert a new curry order in the db
 INSERT INTO orders
 (user_email, curry, hotness, garlic, timestamp)
 VALUES (:user_email, :curry, :hotness, :garlic, :timestamp)
 
--- name: get-orders
--- get all orders
-SELECT email, first_name, last_name, curry, hotness, garlic, timestamp
+-- name: get-todays-orders
+-- get today's orders
+SELECT o.id, email, first_name, last_name, curry, hotness, garlic, timestamp
 FROM orders o INNER JOIN users u
 ON o.user_email = u.email
+WHERE timestamp >= CURDATE()
+ORDER BY timestamp DESC
+
+-- name: get-users-orders
+-- get all of a user's orders
+SELECT o.id, email, first_name, last_name, curry, hotness, garlic, timestamp
+FROM orders o INNER JOIN users u
+ON o.user_email = u.email
+WHERE u.email = :email
 ORDER BY timestamp DESC
 
