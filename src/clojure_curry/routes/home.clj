@@ -20,6 +20,13 @@
 (defn username [request]
   (:first_name (current-user request)))
 
+(defn is-admin?
+  [request]
+  (if-not :authenticated?
+    false
+    (let [current-email (:email (:session request))]
+      (boolean (:admin (first (db/get-user {:email current-email})))))))
+
 (defn can-remove [session order]
   (let [current-email (:email session)
         found-email (:email order)]
@@ -44,18 +51,33 @@
             :curries (db/get-curries)}
            (select-keys (:flash request) [:curry :hotness :garlic :errors]))))
 
+(defn admin-page [request]
+  (layout/render "admin.html"))
+
 (defn login-page [request]
   (layout/render "login.html"))
 
+(defn create-user! [request]
+    (let [params (:params request)]
+      (db/create-user! (assoc params
+                              :pass (hs/encrypt (:password params))
+                              :admin (boolean (:admin params))))
+      (redirect "/admin")))
+
 (defn changepass-page [request]
-  (layout/render "changepass.html"))
+  (layout/render
+    "changepass.html"
+    (merge {:authenticated? (authenticated? request)
+            :is-admin? (is-admin? request)
+            :username (username request)}
+           (select-keys (:flash request) [:email :password :errors]))))
 
 (defn changepass!
   [request]
   (let [password (get-in request [:form-params "password"])
         email    (get-in request [:form-params "email"])]
     (db/set-password! {:email email :password password})
-    (layout/render "changepass.html")))
+    (redirect "/changepass")))
 
 (defn validate-order [params]
   (first

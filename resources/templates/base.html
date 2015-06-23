@@ -37,6 +37,11 @@
 				<li {% ifequal page "order.html" %} class="active"{%endifequal%}>
 				<a href="{{servlet-context}}/order">Order</a>
 				</li>
+				{% if authenticated? %}
+				<li {% ifequal page "changepass.html" %} class="active"{%endifequal%}>
+				<a href="{{servlet-context}}/changepass">Change password</a>
+				</li>
+				{% endif %}
 			</ul>
 		</div>
 	</div>

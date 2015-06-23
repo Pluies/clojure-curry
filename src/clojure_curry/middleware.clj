@@ -71,7 +71,7 @@
       (boolean (:admin (first (db/get-user {:email current-email})))))))
 
 (def rules
-  [{:pattern #"^/admin$"
+  [{:pattern #"^/admin.*"
     :handler admin-access}
    {:pattern #"^/$"
     :handler any-access}

@@ -7,15 +7,17 @@
 			{% if errors %}
 			<div class="alert alert-danger">{{errors|join}}</div>
 			{% endif %}
+			{% if is-admin? %}
 			<p>
-			Username:
-			<input class="form-control" type="text" name="username" value="{{username}}" />
+			Email:
+			<input class="form-control" type="text" name="email" value="{{email}}" />
 			</p>
+			{% endif %}
 			<p>
-			Password:
+			New password:
 			<input class="form-control" type="password" name="password" />
 			</p>
-			<input type="submit" class="btn btn-primary" value="Log in" />
+			<input type="submit" class="btn btn-primary" value="Change password" />
 		</form>
 	</div>
 </div>
