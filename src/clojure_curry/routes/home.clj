@@ -74,10 +74,12 @@
 
 (defn changepass!
   [request]
-  (let [password (get-in request [:form-params "password"])
-        email    (get-in request [:form-params "email"])]
+  (let [password (hs/encrypt (get-in request [:form-params "password"]))
+        email    (if (is-admin? request)
+                   (get-in request [:form-params "email"])
+                   (:email (:session request)))]
     (db/set-password! {:email email :password password})
-    (redirect "/changepass")))
+    (redirect "/")))
 
 (defn validate-order [params]
   (first
@@ -119,14 +121,11 @@
         session  (:session request)
         user     (db/get-user {:email email})]
     (do
-      ; TODO fix this
-      (db/set-password! {:email "florent@catalyst.net.nz" :password (hs/encrypt password)})
       (let [found-password (:pass (first user))]
         (if (and found-password (hs/check password found-password))
           (let [next-url (get-in request [:query-params :next] "/")
                 updated-session (merge session {:identity (keyword email)
                                                 :email email})]
-            (prn next-url)
             (-> (redirect next-url)
                 (assoc :session updated-session)))
           (redirect "/login"))))))

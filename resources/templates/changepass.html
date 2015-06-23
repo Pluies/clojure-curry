@@ -2,7 +2,7 @@
 {% block content %}
 <div class="row">
 	<div class="span12">
-		<form method="POST" action="/login">
+		<form method="POST" action="/changepass">
 			{% csrf-field %}
 			{% if errors %}
 			<div class="alert alert-danger">{{errors|join}}</div>
