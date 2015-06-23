@@ -17,7 +17,7 @@
 			<div class="form-group" style="color: white;">Hello {{username}}&nbsp;</div>
 			<button type="submit" class="btn btn-success">Logout</button>
 		</form>
-	  {% else %}
+		{% else %}
 		<form class="navbar-form navbar-right" method="POST" action="/login">
 			{% csrf-field %}			
 			<div class="form-group">

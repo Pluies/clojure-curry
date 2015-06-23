@@ -139,9 +139,11 @@
   (GET    "/order" request (order-page request))
   (POST   "/order" request (order! request))
   (POST   "/delete-order/:id" [request id] (delete-order! request id))
-;  )
-;
-;(defroutes auth-routes
+  ;  )
+  ;
+  ;(defroutes auth-routes
+  (GET    "/admin" [] admin-page)
+  (POST   "/admin/create-user" [] create-user!)
   (GET    "/login" [] login-page)
   (POST   "/login" [] login!)
   (GET    "/changepass" [] changepass-page)
