@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% script "/js/price.js" %}
 <div class="row">
 	<div class="span12">
 		<form method="POST" action="/order">
@@ -40,7 +41,7 @@
 			{% if errors.garlic %}
 			<div class="alert alert-danger">{{errors.garlic|join}}</div>
 			{% endif %}
-			<input type="submit" class="btn btn-primary" value="Order!" />
+			<input type="submit" class="btn btn-primary btn-success" value="Order!" />
 		</form>
 	</div>
 </div>
