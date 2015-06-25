@@ -17,6 +17,9 @@
     (let [current-email (:email (:session request))]
       (first (db/get-user {:email current-email})))))
 
+(defn balance [request]
+  (:balance (first (db/get-balance {:email (:email (:session request))}))))
+
 (defn username [request]
   (:first_name (current-user request)))
 
@@ -32,7 +35,8 @@
     {:authenticated? true
      :admin?         (admin/is-admin? request)
      :user           (current-user request)
-     :username       (username request)}
+     :username       (username request)
+     :balance        (balance request)}
     {:authenticated false}))
 
 (defn home-page [request]

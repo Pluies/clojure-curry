@@ -67,3 +67,11 @@ INSERT INTO payments
 (user_email, amount, confirmed, timestamp)
 VALUES (:user, :amount, :confirmed, :timestamp)
 
+-- name: get-balance
+-- get the current balance for a given user
+SELECT
+  (SELECT SUM(amount) FROM payments WHERE user_email = :email)
+	- (SELECT SUM(price) FROM orders WHERE user_email = :email)
+	AS balance
+
+
