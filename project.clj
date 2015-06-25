@@ -30,7 +30,7 @@
   :jvm-opts ["-server"]
 
 ;;enable to start the nREPL server when the application launches
-;:env {:repl-port 7001}
+  :env {:repl-port 7001}
 
   :main clojure-curry.core
 
