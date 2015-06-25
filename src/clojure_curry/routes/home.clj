@@ -51,17 +51,28 @@
            (select-keys (:flash request) [:curry :hotness :garlic :errors]))))
 
 (defn admin-page [request]
-  (layout/render "admin.html"))
+  (layout/render
+    "admin.html"
+    (merge {:users (db/get-users)}
+           (select-keys (:flash request) [:user :errors]))))
 
 (defn login-page [request]
   (layout/render "login.html"))
 
 (defn create-user! [request]
-    (let [params (:params request)]
-      (db/create-user! (assoc params
-                              :pass (hs/encrypt (:password params))
-                              :admin (boolean (:admin params))))
-      (redirect "/admin")))
+  (let [params (:params request)]
+    (db/create-user! (assoc params
+                            :pass (hs/encrypt (:password params))
+                            :admin (boolean (:admin params))))
+    (redirect "/admin")))
+
+
+(defn add-payment! [request]
+  (let [params (:params request)]
+    (db/add-payment! (assoc params
+                            :confirmed true
+                            :timestamp (java.util.Date.)))
+    (redirect "/admin")))
 
 (defn changepass-page [request]
   (layout/render
@@ -148,6 +159,7 @@
   ;(defroutes auth-routes
   (GET    "/admin" [] admin-page)
   (POST   "/admin/create-user" [] create-user!)
+  (POST   "/admin/add-payment" [] add-payment!)
   (GET    "/login" [] login-page)
   (POST   "/login" [] login!)
   (GET    "/changepass" [] changepass-page)

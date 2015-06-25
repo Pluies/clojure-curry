@@ -10,6 +10,10 @@ UPDATE users
 SET first_name = :first_name, last_name = :last_name
 WHERE email = :email
 
+-- name: get-users
+-- retrieve all users
+SELECT * FROM users
+
 -- name: get-user
 -- retrieve a user given the email.
 SELECT * FROM users
@@ -61,5 +65,5 @@ ORDER BY timestamp DESC
 -- add a new payment
 INSERT INTO payments
 (user_email, amount, confirmed, timestamp)
-VALUES (:user_email, :amount, :confirmed, :timestamp)
+VALUES (:user, :amount, :confirmed, :timestamp)
 

@@ -27,7 +27,27 @@
 			Password:
 			<input class="form-control" type="password" name="password" />
 			</p>
-			<input type="submit" class="btn btn-primary" value="Log in" />
+			<input type="submit" class="btn btn-primary" value="Create user" />
+		</form>
+		<hr>
+		<form method="POST" action="/admin/add-payment">
+			{% csrf-field %}
+			{% if success.payment %}
+			<div class="alert alert-success">{{success.payment}}</div>
+			{% endif %}
+			<p>
+			User:
+			<select class="form-control" type="text" name="user" value="{{user}}" >
+				{% for u in users %}
+				<option value="{{ u.email }}">{{u.first_name}} {{u.last_name}}</option>
+				{% endfor %}
+			</select>
+			</p>
+			<p>
+			Amount:
+			<input class="form-control" type="text" name="amount" />
+			</p>
+			<input type="submit" class="btn btn-primary" value="Make payment" />
 		</form>
 	</div>
 </div>
