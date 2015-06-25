@@ -7,7 +7,7 @@
 			{% if errors %}
 			<div class="alert alert-danger">{{errors|join}}</div>
 			{% endif %}
-			{% if is-admin? %}
+			{% if admin? %}
 			<p>
 			Email:
 			<input class="form-control" type="text" name="email" value="{{email}}" />

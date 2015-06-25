@@ -1,6 +1,7 @@
 (ns clojure-curry.routes.home
   (:require [clojure-curry.layout :as layout]
             [clojure-curry.db.core :as db]
+            [clojure-curry.admin :as admin]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :refer [ok]]
             [bouncer.core :as b]
@@ -19,25 +20,26 @@
 (defn username [request]
   (:first_name (current-user request)))
 
-(defn is-admin?
-  [request]
-  (if-not :authenticated?
-    false
-    (let [current-email (:email (:session request))]
-      (boolean (:admin (first (db/get-user {:email current-email})))))))
-
 (defn can-remove [session order]
   (let [current-email (:email session)
         found-email (:email order)]
     (= current-email found-email)))
 
+(defn top-bar-variables
+  "Compute variables for the top-bar, to be used in the template"
+  [request]
+  (if-let [authenticated (authenticated? request)]
+    {:authenticated? true
+     :admin?         (admin/is-admin? request)
+     :user           (current-user request)
+     :username       (username request)}
+    {:authenticated false}))
 
 (defn home-page [request]
   (layout/render
     "home.html"
-    (merge {:authenticated? (authenticated? request)
-            :username (username request)
-            :orders (map
+    (merge (top-bar-variables request)
+           {:orders (map
                       #(merge {:can-remove (can-remove (:session request) %)} %)
                       (db/get-todays-orders))}
            (select-keys (:flash request) [:name :message :errors]))))
@@ -45,47 +47,30 @@
 (defn order-page [request]
   (layout/render
     "order.html"
-    (merge {:authenticated? (authenticated? request)
-            :username (username request)
-            :curries (db/get-curries)}
+    (merge (top-bar-variables request)
+           {:curries (db/get-curries)}
            (select-keys (:flash request) [:curry :hotness :garlic :errors]))))
-
-(defn admin-page [request]
-  (layout/render
-    "admin.html"
-    (merge {:users (db/get-users)}
-           (select-keys (:flash request) [:user :errors]))))
 
 (defn login-page [request]
   (layout/render "login.html"))
 
-(defn create-user! [request]
-  (let [params (:params request)]
-    (db/create-user! (assoc params
-                            :pass (hs/encrypt (:password params))
-                            :admin (boolean (:admin params))))
-    (redirect "/admin")))
-
-
-(defn add-payment! [request]
-  (let [params (:params request)]
-    (db/add-payment! (assoc params
-                            :confirmed true
-                            :timestamp (java.util.Date.)))
-    (redirect "/admin")))
+(defn admin-page [request]
+  (layout/render
+    "admin.html"
+    (merge (top-bar-variables request)
+           {:users (db/get-users)}
+           (select-keys (:flash request) [:user :errors]))))
 
 (defn changepass-page [request]
   (layout/render
     "changepass.html"
-    (merge {:authenticated? (authenticated? request)
-            :is-admin? (is-admin? request)
-            :username (username request)}
+    (merge (top-bar-variables request)
            (select-keys (:flash request) [:email :password :errors]))))
 
 (defn changepass!
   [request]
   (let [password (hs/encrypt (get-in request [:form-params "password"]))
-        email    (if (is-admin? request)
+        email    (if (admin/is-admin? request)
                    (get-in request [:form-params "email"])
                    (:email (:session request)))]
     (db/set-password! {:email email :password password})
@@ -158,8 +143,8 @@
   ;
   ;(defroutes auth-routes
   (GET    "/admin" [] admin-page)
-  (POST   "/admin/create-user" [] create-user!)
-  (POST   "/admin/add-payment" [] add-payment!)
+  (POST   "/admin/create-user" [] admin/create-user!)
+  (POST   "/admin/add-payment" [] admin/add-payment!)
   (GET    "/login" [] login-page)
   (POST   "/login" [] login!)
   (GET    "/changepass" [] changepass-page)
