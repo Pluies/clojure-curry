@@ -21,6 +21,11 @@ UPDATE users
 SET pass = :password
 WHERE email = :email
 
+-- name: get-curry
+-- get a curry
+SELECT * FROM curries
+WHERE name = :name
+
 -- name: get-curries
 -- get a list of all available curries
 SELECT * FROM curries
@@ -33,8 +38,8 @@ WHERE id = :id
 -- name: create-order!
 -- insert a new curry order in the db
 INSERT INTO orders
-(user_email, curry, hotness, garlic, timestamp)
-VALUES (:user_email, :curry, :hotness, :garlic, :timestamp)
+(user_email, curry, hotness, garlic, price, timestamp)
+VALUES (:user_email, :curry, :hotness, :garlic, :price, :timestamp)
 
 -- name: get-todays-orders
 -- get today's orders
@@ -51,4 +56,10 @@ FROM orders o INNER JOIN users u
 ON o.user_email = u.email
 WHERE u.email = :email
 ORDER BY timestamp DESC
+
+-- name: add-payment!
+-- add a new payment
+INSERT INTO payments
+(user_email, amount, confirmed, timestamp)
+VALUES (:user_email, :amount, :confirmed, :timestamp)
 

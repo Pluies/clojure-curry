@@ -1,6 +1,5 @@
 (ns clojure-curry.routes.home
-  (:require [clojure-curry.session :as session]
-            [clojure-curry.layout :as layout]
+  (:require [clojure-curry.layout :as layout]
             [clojure-curry.db.core :as db]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :refer [ok]]
@@ -92,9 +91,15 @@
   (if-let [errors (validate-order params)]
     (-> (redirect "/order")
         (assoc :flash (assoc params :errors errors)))
-    (do
+    (let [curry (first (db/get-curry {:name (:curry params)}))
+          vegetarian (:vegetarian curry)
+          garlic (if (nil? (:garlic params))
+                   false ; default: no garlic naan
+                   (Boolean/valueOf (:garlic params)))
+          price (+ (if vegetarian 10 11)
+                   (if garlic 1 0))]
       (db/create-order! (merge {:user_email (:email session)
-                                :garlic false ; default: no garlic naan
+                                :price price
                                 :timestamp (java.util.Date.)}
                                params))
       (redirect "/"))))
