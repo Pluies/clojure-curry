@@ -14,14 +14,16 @@
 (defn current-user [request]
   (if-not :authenticated?
     nil
-    (let [current-email (:email (:session request))]
-      (first (db/get-user {:email current-email})))))
+    (:user (:session request))))
 
 (defn balance [request]
-  (:balance (first (db/get-balance {:email (:email (:session request))}))))
+  (-> (db/get-balance {:email (-> (:session request)
+                                  :email)})
+      first
+      :balance))
 
 (defn username [request]
-  (:first_name (current-user request)))
+  (-> (:session request) :user :first_name))
 
 (defn can-remove [session order]
   (let [current-email (:email session)
@@ -124,13 +126,14 @@
   (let [email    (get-in request [:form-params "email"])
         password (get-in request [:form-params "password"])
         session  (:session request)
-        user     (db/get-user {:email email})]
+        user     (first (db/get-user {:email email}))]
     (do
-      (let [found-password (:pass (first user))]
+      (let [found-password (:pass user)]
         (if (and found-password (hs/check password found-password))
           (let [next-url (get-in request [:query-params :next] "/")
                 updated-session (merge session {:identity (keyword email)
-                                                :email email})]
+                                                :email email
+                                                :user user})]
             (-> (redirect next-url)
                 (assoc :session updated-session)))
           (redirect "/login"))))))

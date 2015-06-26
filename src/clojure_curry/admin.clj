@@ -9,8 +9,7 @@
   [request]
   (if-not :authenticated?
     false
-    (let [current-email (:email (:session request))]
-      (boolean (:admin (first (db/get-user {:email current-email})))))))
+    (boolean (:admin (:user (:session request))))))
 
 (defn create-user! [request]
   (let [params (:params request)]
