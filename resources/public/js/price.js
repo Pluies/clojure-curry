@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function(){
-	var displayPrice = function(){
+	window.displayPrice = function(){
 		var veggie = $('select[name=curry] option:selected').attr('x-veggie') === 'true';
 		var garlic = $('input[name=garlic]:checked').val() === 'true';
 
@@ -8,6 +8,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
 		$('input[type=submit]').val("Order ($" + price + ")");
 	};
-	displayPrice();
-	$('input, select').change(displayPrice);
+	window.displayPrice();
+	$('input, select').change(window.displayPrice);
 }, false);
