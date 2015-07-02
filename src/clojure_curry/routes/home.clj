@@ -9,7 +9,10 @@
             [ring.util.response :refer [redirect]]
             [buddy.hashers :as hs]
             [buddy.auth :refer (authenticated?)]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [clj-time.core :as t]
+            [clj-time.local :as l]
+            [clj-time.predicates :as pr]))
 
 (defn current-user [request]
   (if-not :authenticated?
@@ -45,6 +48,7 @@
   (layout/render
     "home.html"
     (merge (top-bar-variables request)
+           {:time-to-order? (pr/thursday? (l/local-now))}
            {:orders (map
                       #(merge {:can-remove (can-remove (:session request) %)} %)
                       (db/get-todays-orders))}

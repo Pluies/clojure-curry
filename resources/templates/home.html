@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
+{% if time-to-order? %}
 <div class="jumbotron">
-	<h1>clojure-curry</h1>
+	<h1>It's Thursday!</h1>
 	<p>Go order!</p>
 	<p><a class="btn btn-primary btn-lg" href="order">Order &raquo;</a></p>
 </div>
+{% endif %}
 
 <div class="row">
 	<div class="span9">
