@@ -2,6 +2,7 @@
   (:require [clojure-curry.layout :as layout]
             [clojure-curry.db.core :as db]
             [clojure-curry.admin :as admin]
+            [environ.core :refer [env]]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :refer [ok]]
             [bouncer.core :as b]
@@ -78,6 +79,13 @@
     (merge (top-bar-variables request)
            (select-keys (:flash request) [:email :password :errors]))))
 
+(defn payment-page [request]
+  (layout/render
+    "payment.html"
+    (merge (top-bar-variables request)
+           {:bank-account-number (env :bank-account-number)}
+           (select-keys (:flash request) [:email :password :errors]))))
+
 (defn changepass!
   [request]
   (let [password (hs/encrypt (get-in request [:form-params "password"]))
@@ -110,6 +118,9 @@
                                 :timestamp (java.util.Date.)}
                                params))
       (redirect "/"))))
+
+(defn pay! [{:keys [params session]}]
+  nil)
 
 (defn validate-delete-order [params]
   nil)
@@ -157,6 +168,8 @@
   (GET    "/admin" [] admin-page)
   (POST   "/admin/create-user" [] admin/create-user!)
   (POST   "/admin/add-payment" [] admin/add-payment!)
+  (GET    "/payment" [] payment-page)
+  (POST   "/payment" [] pay!)
   (GET    "/login" [] login-page)
   (POST   "/login" [] login!)
   (GET    "/changepass" [] changepass-page)
