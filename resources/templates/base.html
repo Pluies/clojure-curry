@@ -43,6 +43,9 @@ balance.innerHTML = balance.innerHTML.replace('$-', '-$');
 				<li {% ifequal page "order.html" %} class="active"{%endifequal%}>
 				<a href="{{servlet-context}}/order">Order</a>
 				</li>
+				<li {% ifequal page "payment.html" %} class="active"{%endifequal%}>
+				<a href="{{servlet-context}}/payment">Payment</a>
+				</li>
 				{% if authenticated? %}
 				<li {% ifequal page "changepass.html" %} class="active"{%endifequal%}>
 				<a href="{{servlet-context}}/changepass">Change password</a>
