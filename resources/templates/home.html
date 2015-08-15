@@ -2,7 +2,7 @@
 {% block content %}
 {% if time-to-order? %}
 <div class="jumbotron">
-	<h1>It's Thursday!</h1>
+	<h1>It's Thursday! {{ server-time|date:"h:mm a" }}</h1>
 	<p>Go order!</p>
 	<p><a class="btn btn-primary btn-lg" href="order">Order &raquo;</a></p>
 </div>

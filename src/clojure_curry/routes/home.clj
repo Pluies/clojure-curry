@@ -48,8 +48,9 @@
   (layout/render
     "home.html"
     (merge (top-bar-variables request)
-           {:time-to-order? (pr/thursday? (l/local-now))}
-           {:orders (map
+           {:server-time (l/local-now)
+            :time-to-order? (pr/thursday? (l/local-now))
+            :orders (map
                       #(merge {:can-remove (can-remove (:session request) %)} %)
                       (db/get-todays-orders))}
            (select-keys (:flash request) [:name :message :errors]))))
