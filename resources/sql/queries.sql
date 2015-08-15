@@ -70,8 +70,8 @@ VALUES (:user, :amount, :confirmed, :timestamp)
 -- name: get-balance
 -- get the current balance for a given user
 SELECT
-  (SELECT SUM(amount) FROM payments WHERE user_email = :email)
-	- (SELECT SUM(price) FROM orders WHERE user_email = :email)
+  COALESCE((SELECT SUM(amount) FROM payments WHERE user_email = :email), 0)
+	- COALESCE((SELECT SUM(price) FROM orders WHERE user_email = :email), 0)
 	AS balance
 
 
