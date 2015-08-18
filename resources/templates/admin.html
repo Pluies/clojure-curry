@@ -49,6 +49,23 @@
 			</p>
 			<input type="submit" class="btn btn-primary" value="Make payment" />
 		</form>
+		<hr>
+    <h2>Users owing money:</h2>
+		<ul>
+			{% for user in users_owing_money %}
+			<li>
+        {{user.first_name}} {{user.last_name}}: {{user.balance}}
+			</li>
+			{% endfor %}
+		</ul>
+    <h2>Users in the green:</h2>
+		<ul>
+			{% for user in users_owed_money %}
+			<li>
+        {{user.first_name}} {{user.last_name}}: {{user.balance}}
+			</li>
+			{% endfor %}
+		</ul>
 	</div>
 </div>
 {% endblock %}

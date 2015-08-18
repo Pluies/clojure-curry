@@ -71,6 +71,8 @@
     "admin.html"
     (merge (top-bar-variables request)
            {:users (db/get-users)}
+           {:users_owing_money (admin/users-owing-money)}
+           {:users_owed_money (admin/users-owed-money)}
            (select-keys (:flash request) [:user :errors]))))
 
 (defn changepass-page [request]

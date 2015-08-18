@@ -12,7 +12,7 @@ WHERE email = :email
 
 -- name: get-users
 -- retrieve all users
-SELECT * FROM users
+SELECT * FROM users ORDER BY last_name
 
 -- name: get-user
 -- retrieve a user given the email.

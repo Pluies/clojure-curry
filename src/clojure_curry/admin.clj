@@ -26,3 +26,19 @@
                             :timestamp (java.util.Date.)))
     (redirect "/admin")))
 
+(defn users
+  []
+  (db/get-users))
+;  (db/select-all {:table "users"}))
+
+(defn users-with-balance []
+  (map #(merge (first (db/get-balance %)) %)
+       (users)))
+
+(defn users-owing-money []
+  (filter #(> 0 (:balance %))
+    (users-with-balance)))
+
+(defn users-owed-money []
+  (filter #(< 0 (:balance %))
+    (users-with-balance)))
