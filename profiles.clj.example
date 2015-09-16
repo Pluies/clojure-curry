@@ -1,0 +1,3 @@
+; Add super secret values here
+{:dev  {:env {:bank-account-number "xx-xxxx-xxxxxxx-xxx"}}
+ :test {:env {:bank-account-number "xx-xxxx-xxxxxxx-xxx"}}}
