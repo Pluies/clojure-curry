@@ -1,3 +1,14 @@
 ; Add super secret values here
-{:dev  {:env {:bank-account-number "xx-xxxx-xxxxxxx-xxx"}}
- :test {:env {:bank-account-number "xx-xxxx-xxxxxxx-xxx"}}}
+{:dev  {:env {
+              :bank-account-number "xx-xxxx-xxxxxxx-xxx"
+              :email-from "Example <example@example.com>"
+              :account_url "http://localhost:3000/account"
+              :order_url "http://localhost:3000/order"
+              }}
+ :prod {:env {
+              :bank-account-number "xx-xxxx-xxxxxxx-xxx"
+              :email-from "Example <example@example.com>"
+              :account_url "http://localhost:3000/account"
+              :order_url "http://localhost:3000/order"
+              }}}
+

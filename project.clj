@@ -20,6 +20,7 @@
                  [ring-server "0.4.0"]
                  [ragtime "0.3.9"]
                  [buddy "0.5.4"]
+                 [clojurewerkz/mailer "1.2.0"]
                  [org.clojure/java.jdbc "0.3.7"]
                  [instaparse "1.4.0"]
                  [yesql "0.5.0-rc2"]
