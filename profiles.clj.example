@@ -2,13 +2,13 @@
 {:dev  {:env {
               :bank-account-number "xx-xxxx-xxxxxxx-xxx"
               :email-from "Example <example@example.com>"
-              :account_url "http://localhost:3000/account"
-              :order_url "http://localhost:3000/order"
+              :account-url "http://localhost:3000/account"
+              :order-url "http://localhost:3000/order"
               }}
  :prod {:env {
               :bank-account-number "xx-xxxx-xxxxxxx-xxx"
               :email-from "Example <example@example.com>"
-              :account_url "http://localhost:3000/account"
-              :order_url "http://localhost:3000/order"
+              :account-url "http://localhost:3000/account"
+              :order-url "http://localhost:3000/order"
               }}}
 
