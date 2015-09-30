@@ -54,7 +54,7 @@
             ; Order is until 11:30am
             :time-to-order? (and
                               (pr/thursday? (l/local-now))
-                              (> 1130 (read-string (f/unparse (f/formatter-local "HHmm") (l/local-now)))))
+                              (> 1130 (Integer/parseInt (f/unparse (f/formatter-local "HHmm") (l/local-now)))))
             :orders (map
                       #(merge {:can-remove (can-remove (:session request) %)} %)
                       (db/get-todays-orders))}
