@@ -48,7 +48,9 @@
 
   (timbre/set-config!
     [:shared-appender-config :rotor]
-    {:path "clojure_curry.log" :max-size (* 512 1024) :backlog 10})
+    {:path (or (env :log-path) "clojure_curry.log")
+     :max-size (* 512 1024)
+     :backlog 10})
 
   (if (env :dev) (parser/cache-off!))
   (start-nrepl)

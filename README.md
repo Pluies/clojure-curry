@@ -16,6 +16,14 @@ To start a web server for the application, run:
 
     lein ring server
 
+## Deploy
+
+Create a .deb with:
+
+    make deb
+
+(You'll need `fpm`)
+
 ## License
 
 Copyright © 2015 FIXME

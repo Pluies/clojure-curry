@@ -50,7 +50,7 @@
   
   :ragtime
   {:migrations ragtime.sql.files/migrations
-   :database "jdbc:h2:./site.db"}
+   :database ~(str "jdbc:h2:" (System/getenv "DATABASE_URL"))}
   
   
   

@@ -1,0 +1,49 @@
+#!/bin/sh -e
+### BEGIN INIT INFO
+# Provides:          clojure-curry
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Should-Start:      $named
+# Should-Stop:       $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Clojure Curry webserver
+### END INIT INFO
+
+SERVICE_NAME=clojure-curry
+DIR=/var/lib/clojure-curry
+PID_PATH_NAME=/tmp/clojure-curry.pid
+
+. /etc/clojure-curry/config.sh
+
+ccstart() {
+  echo "Starting ${SERVICE_NAME}..."
+  nohup sudo -E -u $RUN_AS java -jar $DIR/clojure-curry.jar >> $OUTPUT_LOG_PATH 2>&1 &
+  echo $! > $PID_PATH_NAME
+}
+
+ccstop() {
+  if [ -f $PID_PATH_NAME ]; then
+    PID=$(cat $PID_PATH_NAME);
+    echo "Stopping ${SERVICE_NAME}..."
+    kill $PID;
+    echo "${SERVICE_NAME} stopped."
+    rm $PID_PATH_NAME
+  else
+    echo "$SERVICE_NAME is not running."
+  fi
+}
+
+case "$1" in
+  start)
+    ccstart
+    ;;
+  stop)
+    ccstop
+    ;;
+  restart|force-reload)
+    ccstop
+    ccstart
+    ;;
+  *) echo "Usage: $0 {start|stop|restart}" >&2; exit 1 ;;
+esac

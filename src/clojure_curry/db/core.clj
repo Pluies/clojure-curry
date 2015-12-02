@@ -1,9 +1,10 @@
 (ns clojure-curry.db.core
   (:require
     [yesql.core :refer [defqueries]]
+    [environ.core :refer [env]]
     [clojure.java.io :as io]))
 
-(def db-store (str (.getName (io/file ".")) "/site.db"))
+(def db-store (env :database-url))
 
 (def db-spec
   {:classname   "org.h2.Driver"
