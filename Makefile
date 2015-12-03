@@ -3,9 +3,8 @@ clean:
 	rm -f **/*.deb
 
 jar:
-	export DATABASE_URL=/tmp/placeholder.db
-	lein ragtime migrate
-	lein uberjar
+	DATABASE_URL=/tmp/placeholder.db lein ragtime migrate
+	DATABASE_URL=/tmp/placeholder.db lein uberjar
 
 deb: clean jar
 	cp target/clojure-curry*.jar packaging/debian/var/lib/clojure-curry/
