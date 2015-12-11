@@ -1,6 +1,6 @@
 clean:
 	rm -rf build
-	rm -f **/*.deb
+	rm -f *.deb
 
 jar:
 	DATABASE_URL=/tmp/placeholder.db lein ragtime migrate
@@ -11,10 +11,12 @@ deb: clean jar
 	fpm -s dir -t deb -e -C packaging/debian/ \
 		--name clojure-curry \
 		--architecture all \
+		--vendor "Catalyst" \
 		--maintainer "curryoverlord@catalyst.net.nz" \
 		--description "App for ordering Thursday Curry"\
 		--version "1.0.$(shell date +%Y%m%d-%H%M)" \
 		--config-files /etc \
+		--depends java-runtime-headless \
 		--after-install packaging/scripts/after-install.sh \
 		--verbose \
 		.
